@@ -264,15 +264,24 @@ body {
   <source src="https://archive.org/download/Bethena/Bethena.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Film sound: projector hum, crackle, mechanical noise -->
+<audio id="filmSound" loop>
+  <source src="https://archive.org/download/16mmprojector/16mmprojector.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 const music = document.getElementById("music");
+const filmSound = document.getElementById("filmSound");
 const slides = document.querySelectorAll(".slide");
 let current = 0;
 
 /* Start film automatically after leader countdown */
 setTimeout(() => {
   document.getElementById("leader").style.display = "none";
+
   music.play().catch(()=>{});
+  filmSound.play().catch(()=>{});
+
   runProjector();
 }, 3000);
 
