@@ -13,19 +13,30 @@ const slides = document.querySelectorAll(".slide");
 let current = 0;
 
 // ================================
-//   START AFTER LEADER COUNTDOWN
+//   START BUTTON (AUDIO UNLOCK)
 // ================================
 
-setTimeout(() => {
+document.getElementById("startButton").addEventListener("click", () => {
+  // Hide start overlay
+  document.getElementById("startButton").style.display = "none";
+
+  // User interaction allows audio playback
+  music.play();
+  filmSound.play();
+
+  startFilm();
+});
+
+// ================================
+//   START FILM AFTER LEADER
+// ================================
+
+function startFilm() {
   const leader = document.getElementById("leader");
   leader.style.display = "none";
 
-  // Play both audio tracks
-  music.play().catch(() => {});
-  filmSound.play().catch(() => {});
-
   runProjector();
-}, 3000);
+}
 
 // ================================
 //   PROJECTOR LOGIC
