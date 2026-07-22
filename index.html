@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMS Titanic - 60 Second Narrative</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+overflow:hidden;
+font-family:Georgia, serif;
+}
+
+#container{
+width:100vw;
+height:100vh;
+position:relative;
+overflow:hidden;
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+opacity:0;
+transition:opacity 2s;
+}
+
+.slide.active{
+opacity:1;
+}
+
+.overlay{
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.45);
+}
+
+.caption{
+position:relative;
+z-index:2;
+color:white;
+max-width:900px;
+padding:30px;
+font-size:2rem;
+line-height:1.6;
+text-shadow:2px 2px 8px black;
+animation:fade 2s;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+#title{
+position:absolute;
+top:30px;
+left:50%;
+transform:translateX(-50%);
+color:white;
+font-size:2rem;
+letter-spacing:3px;
+z-index:10;
+}
+
+#timer{
+position:absolute;
+bottom:20px;
+right:30px;
+color:white;
+font-size:20px;
+z-index:20;
+font-family:Arial;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="title">RMS TITANIC</div>
+
+<!-- Narrative Slide 1 -->
+<div class="slide active"
+style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600');">
+<div class="overlay"></div>
+<div class="caption">
+In the spring of 1912, a ship unlike any before it prepared for its maiden voyage—vast, luxurious, and hailed as unsinkable.
+</div>
+</div>
+
+<!-- Narrative Slide 2 -->
+<div class="slide"
+style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600');">
+<div class="overlay"></div>
+<div class="caption">
+As Titanic left Southampton, more than 2,200 passengers and crew settled in, unaware that their journey would become one of history’s most haunting stories.
+</div>
+</div>
+
+<!-- Narrative Slide 3 -->
+<div class="slide"
+style="background-image:url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=1600');">
+<div class="overlay"></div>
+<div class="caption">
+Four days later, under a moonless sky, the ship cut through calm waters. Then—an iceberg loomed ahead, silent and immense.
+</div>
+</div>
+
+<!-- Narrative Slide 4 -->
+<div class="slide"
+style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600');">
+<div class="overlay"></div>
+<div class="caption">
+The impact was subtle, almost gentle. But beneath the surface, steel plates buckled. Water surged into the lower decks, sealing the ship’s fate.
+</div>
+</div>
+
+<!-- Narrative Slide 5 -->
+<div class="slide"
+style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600');">
+<div class="overlay"></div>
+<div class="caption">
+Chaos spread as lifeboats were lowered into the freezing Atlantic. Amid the panic, the ship’s band played on—offering calm in the darkness.
+</div>
+</div>
+
+<!-- Narrative Slide 6 -->
+<div class="slide"
+style="background-image:url('https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600');">
+<div class="overlay"></div>
+<div class="caption">
+At 2:20 a.m., Titanic slipped beneath the waves. Over 1,500 lives were lost. The disaster reshaped maritime safety forever, leaving a legacy written in sorrow and remembrance.
+</div>
+</div>
+
+<div id="timer">60</div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll(".slide");
+let current = 0;
+
+// Change slide every 10 seconds (6 slides = 60 seconds)
+function nextSlide(){
+    slides[current].classList.remove("active");
+    current++;
+    if(current >= slides.length){
+        current = slides.length - 1;
+        return;
+    }
+    slides[current].classList.add("active");
+}
+
+setInterval(nextSlide, 10000);
+
+// Countdown timer
+let seconds = 60;
+const timer = document.getElementById("timer");
+
+const countdown = setInterval(()=>{
+    seconds--;
+    timer.innerHTML = seconds;
+    if(seconds <= 0){
+        clearInterval(countdown);
+    }
+}, 1000);
+</script>
+
+</body>
+</html>
