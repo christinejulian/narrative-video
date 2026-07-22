@@ -33,7 +33,6 @@ body {
   position: relative;
   overflow: hidden;
 
-  /* Harsh vignette like a 35mm gate */
   box-shadow:
     inset 0 0 200px rgba(0,0,0,1),
     inset 0 0 300px rgba(0,0,0,0.9);
@@ -68,7 +67,7 @@ body {
   inset: 0;
   background: black;
   opacity: 0;
-  transition: opacity 0.1s linear; /* abrupt cuts */
+  transition: opacity 0.1s linear;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -95,7 +94,7 @@ body {
   100% { background-position: 120px 240px, 120px -120px; }
 }
 
-/* Slide active — no jitter */
+/* Slide active — NO jitter */
 .slide.active {
   opacity: 1;
 }
@@ -287,7 +286,7 @@ function runProjector() {
 
     slides[current].classList.add("active");
 
-    const randomTime = 7000 + Math.random() * 6000; // 7–13 seconds
+    const randomTime = 7000 + Math.random() * 6000;
     setTimeout(nextSlide, randomTime);
   }
 
