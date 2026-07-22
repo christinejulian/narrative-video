@@ -7,252 +7,288 @@
 
 <style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body{
-background:black;
-overflow:hidden;
-font-family:"Times New Roman", serif;
+  background:black;
+  overflow:hidden;
+  font-family:"Times New Roman", serif;
 }
 
 /* Container */
 #container{
-width:100vw;
-height:100vh;
-position:relative;
-overflow:hidden;
+  width:100vw;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
 }
 
-/* Blank slide (no images at all) */
+/* Blank slide */
 .slide{
-position:absolute;
-width:100%;
-height:100%;
-background:black;
-opacity:0;
-transition:opacity 2s;
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:black;
+  opacity:0;
+  transition:opacity 2s;
 }
 
-/* Film scratches */
+/* CSS-based Film scratches & dust simulation */
 .slide::after{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:url('https://i.imgur.com/8fKQZ5C.png');
-opacity:0.25;
-pointer-events:none;
-animation:scratches 1.2s infinite linear;
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-image: 
+    linear-gradient(90deg, transparent 98%, rgba(255,255,255,0.15) 99%),
+    radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10%);
+  background-size: 150px 150px, 300px 300px;
+  opacity:0.25;
+  pointer-events:none;
+  animation:scratches 0.8s infinite steps(3);
 }
 
 @keyframes scratches{
-0%{opacity:0.2;}
-50%{opacity:0.3;}
-100%{opacity:0.25;}
+  0%{background-position: 0 0, 0 0;}
+  50%{background-position: 50px 100px, -50px 50px;}
+  100%{background-position: 100px 200px, 100px -100px;}
 }
 
 /* Film jitter */
 @keyframes jitter{
-0%{transform:translate(0,0);}
-50%{transform:translate(-2px,1px);}
-100%{transform:translate(1px,-1px);}
+  0%{transform:translate(0,0);}
+  20%{transform:translate(-1px, 2px);}
+  40%{transform:translate(-2px,-1px);}
+  60%{transform:translate(2px, 1px);}
+  80%{transform:translate(1px,-2px);}
+  100%{transform:translate(0,0);}
 }
 
 .slide.active{
-opacity:1;
-animation:jitter 0.15s infinite;
+  opacity:1;
+  animation:jitter 0.15s infinite;
 }
 
-/* Hand-drawn frame border */
+/* Pure CSS vintage frame border with vignette */
 .frame-border{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-pointer-events:none;
-background:url('https://i.imgur.com/8z8Vt7T.png');
-background-size:100% 100%;
-opacity:0.7;
-z-index:5;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 0 0 120px rgba(0,0,0,0.8);
+  border: 12px solid #111;
+  outline: 4px solid #222;
+  outline-offset: -16px;
+  z-index:5;
 }
 
 /* Art Nouveau intertitle */
 .intertitle{
-position:absolute;
-bottom:15%;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,0.75);
-padding:35px 50px;
-border:6px double white;
-border-radius:12px;
-color:white;
-font-size:2.2rem;
-max-width:850px;
-text-align:center;
-font-family:"Georgia", serif;
-letter-spacing:1px;
-text-shadow:2px 2px 6px black;
-animation:fade 2s;
+  position:absolute;
+  bottom:15%;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.85);
+  padding:35px 50px;
+  border:6px double #ddd;
+  border-radius:12px;
+  color:#eee;
+  font-size:2.2rem;
+  max-width:850px;
+  text-align:center;
+  font-family:"Georgia", serif;
+  letter-spacing:1px;
+  text-shadow:2px 2px 6px black;
+  animation:fade 2s;
 }
 
 /* Ornate flourishes */
 .intertitle:before,
 .intertitle:after{
-content:"❦";
-position:absolute;
-font-size:2.5rem;
-top:-25px;
-color:white;
+  content:"❦";
+  position:absolute;
+  font-size:2.5rem;
+  top:-25px;
+  color:#ddd;
 }
 .intertitle:before{left:20px;}
 .intertitle:after{right:20px;}
 
 @keyframes fade{
-from{opacity:0;}
-to{opacity:1;}
+  from{opacity:0;}
+  to{opacity:1;}
 }
 
 /* Reel-change cue dot */
 #cue{
-position:absolute;
-top:20px;
-right:20px;
-width:20px;
-height:20px;
-border-radius:50%;
-background:white;
-opacity:0;
-transition:opacity 1s;
-z-index:20;
+  position:absolute;
+  top:20px;
+  right:20px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:white;
+  opacity:0;
+  transition:opacity 1s;
+  z-index:20;
+  box-shadow: 0 0 10px white;
 }
 
 /* Timer */
 #timer{
-position:absolute;
-bottom:20px;
-right:30px;
-color:white;
-font-size:20px;
-z-index:20;
-font-family:Arial;
+  position:absolute;
+  bottom:20px;
+  right:30px;
+  color:white;
+  font-size:20px;
+  z-index:20;
+  font-family:Arial;
 }
 
-/* Music */
-audio{
-display:none;
+/* Click-to-play overlay for audio policy */
+#play-prompt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  z-index: 100;
+  cursor: pointer;
+  text-align: center;
+  font-family: "Georgia", serif;
 }
 </style>
-
 </head>
 
 <body>
 
+<!-- User interaction overlay to satisfy browser autoplay policies -->
+<div id="play-prompt">Click Anywhere to Begin Silent Film</div>
+
 <div id="container">
+  <div class="frame-border"></div>
+  <div id="cue"></div>
 
-<div class="frame-border"></div>
-<div id="cue"></div>
+  <!-- Slide 1 -->
+  <div class="slide active">
+    <div class="intertitle">
+      April 10, 1912.<br>
+      The mighty TITANIC sets forth upon her maiden voyage.
+    </div>
+  </div>
 
-<!-- Slide 1 -->
-<div class="slide active">
-<div class="intertitle">
-April 10, 1912.<br>
-The mighty TITANIC sets forth upon her maiden voyage.
-</div>
-</div>
+  <!-- Slide 2 -->
+  <div class="slide">
+    <div class="intertitle">
+      A palace of steel and velvet,<br>
+      bearing more than two thousand souls toward New York.
+    </div>
+  </div>
 
-<!-- Slide 2 -->
-<div class="slide">
-<div class="intertitle">
-A palace of steel and velvet,<br>
-bearing more than two thousand souls toward New York.
-</div>
-</div>
+  <!-- Slide 3 -->
+  <div class="slide">
+    <div class="intertitle">
+      On a moonless night…<br>
+      A silent shape of ice drifts into her path.
+    </div>
+  </div>
 
-<!-- Slide 3 -->
-<div class="slide">
-<div class="intertitle">
-On a moonless night…<br>
-A silent shape of ice drifts into her path.
-</div>
-</div>
+  <!-- Slide 4 -->
+  <div class="slide">
+    <div class="intertitle">
+      The impact is gentle—yet mortal.<br>
+      Water floods the lower decks.
+    </div>
+  </div>
 
-<!-- Slide 4 -->
-<div class="slide">
-<div class="intertitle">
-The impact is gentle—yet mortal.<br>
-Water floods the lower decks.
-</div>
-</div>
+  <!-- Slide 5 -->
+  <div class="slide">
+    <div class="intertitle">
+      Lifeboats descend into the icy Atlantic.<br>
+      The band plays on, brave to the final note.
+    </div>
+  </div>
 
-<!-- Slide 5 -->
-<div class="slide">
-<div class="intertitle">
-Lifeboats descend into the icy Atlantic.<br>
-The band plays on, brave to the final note.
-</div>
-</div>
+  <!-- Slide 6 -->
+  <div class="slide">
+    <div class="intertitle">
+      At 2:20 a.m., TITANIC slips beneath the waves.<br>
+      More than 1,500 souls are lost.<br>
+      A tragedy remembered for all time.
+    </div>
+  </div>
 
-<!-- Slide 6 -->
-<div class="slide">
-<div class="intertitle">
-At 2:20 a.m., TITANIC slips beneath the waves.<br>
-More than 1,500 souls are lost.<br>
-A tragedy remembered for all time.
-</div>
-</div>
-
-<div id="timer">60</div>
-
+  <div id="timer">60</div>
 </div>
 
 <!-- Public-domain piano score -->
-<audio id="music" autoplay>
-<source src="https://archive.org/download/Bethena/Bethena.mp3" type="audio/mpeg">
+<audio id="music" loop>
+  <source src="https://archive.org/download/Bethena/Bethena.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+const promptOverlay = document.getElementById("play-prompt");
+const music = document.getElementById("music");
 const slides = document.querySelectorAll(".slide");
 let current = 0;
+let filmStarted = false;
 
-// Slide change every 10 seconds
-function nextSlide(){
+// Handle browser audio restrictions via click
+promptOverlay.addEventListener("click", () => {
+  promptOverlay.style.display = "none";
+  music.play().catch(e => console.log("Audio play blocked:", e));
+  startFilm();
+});
+
+function startFilm() {
+  if (filmStarted) return;
+  filmStarted = true;
+
+  // Slide change every 10 seconds
+  const slideInterval = setInterval(() => {
     slides[current].classList.remove("active");
     current++;
     if(current >= slides.length){
-        current = slides.length - 1;
-        return;
+      clearInterval(slideInterval);
+      current = slides.length - 1;
+      slides[current].classList.add("active");
+      return;
     }
     slides[current].classList.add("active");
-}
+  }, 10000);
 
-setInterval(nextSlide, 10000);
+  // Countdown timer + reel cue
+  let seconds = 60;
+  const timer = document.getElementById("timer");
+  const cue = document.getElementById("cue");
 
-// Countdown timer + reel cue
-let seconds = 60;
-const timer = document.getElementById("timer");
-const cue = document.getElementById("cue");
-
-const countdown = setInterval(()=>{
+  const countdown = setInterval(() => {
     seconds--;
     timer.innerHTML = seconds;
 
-    // Reel-change cue dot at 30 seconds
     if(seconds === 30){
-        cue.style.opacity = 1;
-        setTimeout(()=> cue.style.opacity = 0, 3000);
+      cue.style.opacity = 1;
+      setTimeout(() => cue.style.opacity = 0, 3000);
     }
 
     if(seconds <= 0){
-        clearInterval(countdown);
+      clearInterval(countdown);
     }
-}, 1000);
+  }, 1000);
+}
 </script>
 
 </body>
