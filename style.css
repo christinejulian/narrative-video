@@ -1,0 +1,194 @@
+/* ================================
+   GLOBAL SILENT FILM LOOK
+   ================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: black;
+  font-family: "Times New Roman", serif;
+  cursor: none;
+  overflow: hidden;
+}
+
+/* ================================
+   PROJECTOR SCREEN
+   ================================ */
+
+#container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  /* Harsh vignette like a 35mm gate */
+  box-shadow:
+    inset 0 0 200px rgba(0,0,0,1),
+    inset 0 0 300px rgba(0,0,0,0.9);
+}
+
+/* ================================
+   PROJECTOR FLICKER (HARSH)
+   ================================ */
+
+#projector-flicker {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.08);
+  mix-blend-mode: screen;
+  animation: flicker 0.07s infinite steps(2);
+  pointer-events: none;
+  z-index: 20;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+/* ================================
+   SLIDES / INTERTITLES
+   ================================ */
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background: black;
+  opacity: 0;
+  transition: opacity 0.1s linear; /* abrupt cuts */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Heavy scratches, dust, dirt */
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, transparent 96%, rgba(255,255,255,0.25) 98%, transparent 100%),
+    radial-gradient(circle, rgba(255,255,255,0.3) 4%, transparent 5%);
+  background-size: 140px 140px, 260px 260px;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  animation: scratches 0.4s infinite steps(3);
+  pointer-events: none;
+}
+
+@keyframes scratches {
+  0% { background-position: 0 0, 0 0; }
+  50% { background-position: 60px 120px, -80px 60px; }
+  100% { background-position: 120px 240px, 120px -120px; }
+}
+
+/* Violent gate weave jitter */
+.slide.active {
+  opacity: 1;
+  animation: jitter 0.12s infinite;
+}
+
+@keyframes jitter {
+  0% { transform: translate(0,0); }
+  10% { transform: translate(-4px, 3px); }
+  20% { transform: translate(3px, -5px); }
+  30% { transform: translate(-6px, 2px); }
+  40% { transform: translate(5px, 4px); }
+  50% { transform: translate(-3px, -6px); }
+  60% { transform: translate(4px, -2px); }
+  70% { transform: translate(-5px, 5px); }
+  80% { transform: translate(2px, -4px); }
+  100% { transform: translate(0,0); }
+}
+
+/* ================================
+   INTERTITLE CARDS
+   ================================ */
+
+.intertitle {
+  background: black;
+  padding: 20px;
+  color: #e6e6e6;
+  font-size: 2.6rem;
+  max-width: 900px;
+  width: 80%;
+  text-align: center;
+  font-family: "Georgia", serif;
+  letter-spacing: 2px;
+  line-height: 1.6;
+  text-shadow: 1px 1px 4px rgba(255,255,255,0.2);
+
+  /* No fade-in animation — silent films cut abruptly */
+}
+
+.intertitle-box {
+  border: 5px solid #777;
+  outline: 3px solid #222;
+  outline-offset: -12px;
+  padding: 50px 40px;
+  background: radial-gradient(circle, #151515 0%, #000 100%);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
+}
+
+/* ================================
+   FRAME BORDER (GATE MASK)
+   ================================ */
+
+.frame-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 20px solid #050505;
+  box-shadow:
+    inset 0 0 80px rgba(0,0,0,1),
+    inset 0 0 160px rgba(0,0,0,0.9);
+  z-index: 10;
+}
+
+/* ================================
+   CUE DOT (CIGARETTE BURN)
+   ================================ */
+
+#cue {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 40%, #666 100%);
+  border: 2px solid #000;
+  opacity: 0;
+  box-shadow: 0 0 12px white;
+  transition: opacity 0.2s;
+  z-index: 30;
+}
+
+/* ================================
+   FILM LEADER (3–2–1)
+   ================================ */
+
+#leader {
+  position: absolute;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12rem;
+  color: white;
+  z-index: 200;
+  animation: leaderCountdown 3s steps(1) forwards;
+}
+
+@keyframes leaderCountdown {
+  0% { content: "3"; }
+  33% { content: "2"; }
+  66% { content: "1"; }
+  100% { opacity: 0; }
+}
