@@ -26,14 +26,12 @@ position:relative;
 overflow:hidden;
 }
 
-/* Silent film sepia tint + jitter */
+/* Blank slide (no background) */
 .slide{
 position:absolute;
 width:100%;
 height:100%;
-background-size:cover;
-background-position:center;
-filter:sepia(75%) contrast(1.3) brightness(0.9);
+background:black;
 opacity:0;
 transition:opacity 2s;
 }
@@ -162,8 +160,7 @@ display:none;
 <div id="cue"></div>
 
 <!-- Slide 1 -->
-<div class="slide active"
-style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600');">
+<div class="slide active">
 <div class="intertitle">
 April 10, 1912.<br>
 The mighty TITANIC sets forth upon her maiden voyage.
@@ -171,8 +168,7 @@ The mighty TITANIC sets forth upon her maiden voyage.
 </div>
 
 <!-- Slide 2 -->
-<div class="slide"
-style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600');">
+<div class="slide">
 <div class="intertitle">
 A palace of steel and velvet,<br>
 bearing more than two thousand souls toward New York.
@@ -180,8 +176,7 @@ bearing more than two thousand souls toward New York.
 </div>
 
 <!-- Slide 3 -->
-<div class="slide"
-style="background-image:url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=1600');">
+<div class="slide">
 <div class="intertitle">
 On a moonless night…<br>
 A silent shape of ice drifts into her path.
@@ -189,8 +184,7 @@ A silent shape of ice drifts into her path.
 </div>
 
 <!-- Slide 4 -->
-<div class="slide"
-style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600');">
+<div class="slide">
 <div class="intertitle">
 The impact is gentle—yet mortal.<br>
 Water floods the lower decks.
@@ -198,8 +192,7 @@ Water floods the lower decks.
 </div>
 
 <!-- Slide 5 -->
-<div class="slide"
-style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600');">
+<div class="slide">
 <div class="intertitle">
 Lifeboats descend into the icy Atlantic.<br>
 The band plays on, brave to the final note.
@@ -207,8 +200,7 @@ The band plays on, brave to the final note.
 </div>
 
 <!-- Slide 6 -->
-<div class="slide"
-style="background-image:url('https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600');">
+<div class="slide">
 <div class="intertitle">
 At 2:20 a.m., TITANIC slips beneath the waves.<br>
 More than 1,500 souls are lost.<br>
