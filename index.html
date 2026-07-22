@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RMS Titanic - 60 Second Narrative</title>
+<title>RMS Titanic – Silent Film (1912)</title>
 
 <style>
 *{
@@ -15,9 +15,10 @@ box-sizing:border-box;
 body{
 background:black;
 overflow:hidden;
-font-family:Georgia, serif;
+font-family:"Times New Roman", serif;
 }
 
+/* Container */
 #container{
 width:100vw;
 height:100vh;
@@ -25,65 +26,116 @@ position:relative;
 overflow:hidden;
 }
 
+/* Silent film sepia tint + jitter */
 .slide{
 position:absolute;
 width:100%;
 height:100%;
 background-size:cover;
 background-position:center;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
+filter:sepia(75%) contrast(1.3) brightness(0.9);
 opacity:0;
 transition:opacity 2s;
 }
 
-.slide.active{
-opacity:1;
-}
-
-.overlay{
+/* Film scratches overlay */
+.slide::after{
+content:"";
 position:absolute;
+top:0;
+left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,.45);
+background:url('https://i.imgur.com/8fKQZ5C.png');
+opacity:0.25;
+pointer-events:none;
+animation:scratches 1.2s infinite linear;
 }
 
-.caption{
-position:relative;
-z-index:2;
+@keyframes scratches{
+0%{opacity:0.2;}
+50%{opacity:0.3;}
+100%{opacity:0.25;}
+}
+
+/* Film jitter */
+@keyframes jitter{
+0%{transform:translate(0,0);}
+50%{transform:translate(-2px,1px);}
+100%{transform:translate(1px,-1px);}
+}
+
+.slide.active{
+opacity:1;
+animation:jitter 0.15s infinite;
+}
+
+/* Hand-drawn frame border */
+.frame-border{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+background:url('https://i.imgur.com/8z8Vt7T.png');
+background-size:100% 100%;
+opacity:0.7;
+z-index:5;
+}
+
+/* Art Nouveau intertitle */
+.intertitle{
+position:absolute;
+bottom:15%;
+left:50%;
+transform:translateX(-50%);
+background:rgba(0,0,0,0.75);
+padding:35px 50px;
+border:6px double white;
+border-radius:12px;
 color:white;
-max-width:900px;
-padding:30px;
-font-size:2rem;
-line-height:1.6;
-text-shadow:2px 2px 8px black;
+font-size:2.2rem;
+max-width:850px;
+text-align:center;
+font-family:"Georgia", serif;
+letter-spacing:1px;
+text-shadow:2px 2px 6px black;
 animation:fade 2s;
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-#title{
+/* Ornate flourishes */
+.intertitle:before,
+.intertitle:after{
+content:"❦";
 position:absolute;
-top:30px;
-left:50%;
-transform:translateX(-50%);
+font-size:2.5rem;
+top:-25px;
 color:white;
-font-size:2rem;
-letter-spacing:3px;
-z-index:10;
+}
+.intertitle:before{left:20px;}
+.intertitle:after{right:20px;}
+
+@keyframes fade{
+from{opacity:0;}
+to{opacity:1;}
 }
 
+/* Reel-change cue dot */
+#cue{
+position:absolute;
+top:20px;
+right:20px;
+width:20px;
+height:20px;
+border-radius:50%;
+background:white;
+opacity:0;
+transition:opacity 1s;
+z-index:20;
+}
+
+/* Timer */
 #timer{
 position:absolute;
 bottom:20px;
@@ -93,6 +145,11 @@ font-size:20px;
 z-index:20;
 font-family:Arial;
 }
+
+/* Music */
+audio{
+display:none;
+}
 </style>
 
 </head>
@@ -101,59 +158,61 @@ font-family:Arial;
 
 <div id="container">
 
-<div id="title">RMS TITANIC</div>
+<div class="frame-border"></div>
+<div id="cue"></div>
 
-<!-- Narrative Slide 1 -->
+<!-- Slide 1 -->
 <div class="slide active"
 style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600');">
-<div class="overlay"></div>
-<div class="caption">
-In the spring of 1912, a ship unlike any before it prepared for its maiden voyage—vast, luxurious, and hailed as unsinkable.
+<div class="intertitle">
+April 10, 1912.<br>
+The mighty TITANIC sets forth upon her maiden voyage.
 </div>
 </div>
 
-<!-- Narrative Slide 2 -->
+<!-- Slide 2 -->
 <div class="slide"
 style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600');">
-<div class="overlay"></div>
-<div class="caption">
-As Titanic left Southampton, more than 2,200 passengers and crew settled in, unaware that their journey would become one of history’s most haunting stories.
+<div class="intertitle">
+A palace of steel and velvet,<br>
+bearing more than two thousand souls toward New York.
 </div>
 </div>
 
-<!-- Narrative Slide 3 -->
+<!-- Slide 3 -->
 <div class="slide"
 style="background-image:url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=1600');">
-<div class="overlay"></div>
-<div class="caption">
-Four days later, under a moonless sky, the ship cut through calm waters. Then—an iceberg loomed ahead, silent and immense.
+<div class="intertitle">
+On a moonless night…<br>
+A silent shape of ice drifts into her path.
 </div>
 </div>
 
-<!-- Narrative Slide 4 -->
+<!-- Slide 4 -->
 <div class="slide"
 style="background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600');">
-<div class="overlay"></div>
-<div class="caption">
-The impact was subtle, almost gentle. But beneath the surface, steel plates buckled. Water surged into the lower decks, sealing the ship’s fate.
+<div class="intertitle">
+The impact is gentle—yet mortal.<br>
+Water floods the lower decks.
 </div>
 </div>
 
-<!-- Narrative Slide 5 -->
+<!-- Slide 5 -->
 <div class="slide"
 style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600');">
-<div class="overlay"></div>
-<div class="caption">
-Chaos spread as lifeboats were lowered into the freezing Atlantic. Amid the panic, the ship’s band played on—offering calm in the darkness.
+<div class="intertitle">
+Lifeboats descend into the icy Atlantic.<br>
+The band plays on, brave to the final note.
 </div>
 </div>
 
-<!-- Narrative Slide 6 -->
+<!-- Slide 6 -->
 <div class="slide"
 style="background-image:url('https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600');">
-<div class="overlay"></div>
-<div class="caption">
-At 2:20 a.m., Titanic slipped beneath the waves. Over 1,500 lives were lost. The disaster reshaped maritime safety forever, leaving a legacy written in sorrow and remembrance.
+<div class="intertitle">
+At 2:20 a.m., TITANIC slips beneath the waves.<br>
+More than 1,500 souls are lost.<br>
+A tragedy remembered for all time.
 </div>
 </div>
 
@@ -161,11 +220,16 @@ At 2:20 a.m., Titanic slipped beneath the waves. Over 1,500 lives were lost. The
 
 </div>
 
+<!-- Public-domain piano score -->
+<audio id="music" autoplay>
+<source src="https://archive.org/download/Bethena/Bethena.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 const slides = document.querySelectorAll(".slide");
 let current = 0;
 
-// Change slide every 10 seconds (6 slides = 60 seconds)
+// Slide change every 10 seconds
 function nextSlide(){
     slides[current].classList.remove("active");
     current++;
@@ -178,13 +242,21 @@ function nextSlide(){
 
 setInterval(nextSlide, 10000);
 
-// Countdown timer
+// Countdown timer + reel cue
 let seconds = 60;
 const timer = document.getElementById("timer");
+const cue = document.getElementById("cue");
 
 const countdown = setInterval(()=>{
     seconds--;
     timer.innerHTML = seconds;
+
+    // Reel-change cue dot at 30 seconds
+    if(seconds === 30){
+        cue.style.opacity = 1;
+        setTimeout(()=> cue.style.opacity = 0, 3000);
+    }
+
     if(seconds <= 0){
         clearInterval(countdown);
     }
