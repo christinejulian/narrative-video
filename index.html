@@ -6,288 +6,313 @@
 <title>RMS Titanic – Silent Film (1912)</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+/* ================================
+   GLOBAL SILENT FILM LOOK
+   ================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-  background:black;
-  overflow:hidden;
-  font-family:"Times New Roman", serif;
+body {
+  background: black;
+  font-family: "Times New Roman", serif;
+  cursor: none;
+  overflow: hidden;
 }
 
-/* Container */
-#container{
-  width:100vw;
-  height:100vh;
-  position:relative;
-  overflow:hidden;
+/* ================================
+   PROJECTOR SCREEN
+   ================================ */
+
+#container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  /* Harsh vignette like a 35mm gate */
+  box-shadow:
+    inset 0 0 200px rgba(0,0,0,1),
+    inset 0 0 300px rgba(0,0,0,0.9);
 }
 
-/* Blank slide */
-.slide{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:black;
-  opacity:0;
-  transition:opacity 2s;
-}
+/* ================================
+   PROJECTOR FLICKER (HARSH)
+   ================================ */
 
-/* CSS-based Film scratches & dust simulation */
-.slide::after{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background-image: 
-    linear-gradient(90deg, transparent 98%, rgba(255,255,255,0.15) 99%),
-    radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10%);
-  background-size: 150px 150px, 300px 300px;
-  opacity:0.25;
-  pointer-events:none;
-  animation:scratches 0.8s infinite steps(3);
-}
-
-@keyframes scratches{
-  0%{background-position: 0 0, 0 0;}
-  50%{background-position: 50px 100px, -50px 50px;}
-  100%{background-position: 100px 200px, 100px -100px;}
-}
-
-/* Film jitter */
-@keyframes jitter{
-  0%{transform:translate(0,0);}
-  20%{transform:translate(-1px, 2px);}
-  40%{transform:translate(-2px,-1px);}
-  60%{transform:translate(2px, 1px);}
-  80%{transform:translate(1px,-2px);}
-  100%{transform:translate(0,0);}
-}
-
-.slide.active{
-  opacity:1;
-  animation:jitter 0.15s infinite;
-}
-
-/* Pure CSS vintage frame border with vignette */
-.frame-border{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  box-shadow: inset 0 0 80px rgba(0,0,0,0.9), inset 0 0 120px rgba(0,0,0,0.8);
-  border: 12px solid #111;
-  outline: 4px solid #222;
-  outline-offset: -16px;
-  z-index:5;
-}
-
-/* Art Nouveau intertitle */
-.intertitle{
-  position:absolute;
-  bottom:15%;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.85);
-  padding:35px 50px;
-  border:6px double #ddd;
-  border-radius:12px;
-  color:#eee;
-  font-size:2.2rem;
-  max-width:850px;
-  text-align:center;
-  font-family:"Georgia", serif;
-  letter-spacing:1px;
-  text-shadow:2px 2px 6px black;
-  animation:fade 2s;
-}
-
-/* Ornate flourishes */
-.intertitle:before,
-.intertitle:after{
-  content:"❦";
-  position:absolute;
-  font-size:2.5rem;
-  top:-25px;
-  color:#ddd;
-}
-.intertitle:before{left:20px;}
-.intertitle:after{right:20px;}
-
-@keyframes fade{
-  from{opacity:0;}
-  to{opacity:1;}
-}
-
-/* Reel-change cue dot */
-#cue{
-  position:absolute;
-  top:20px;
-  right:20px;
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:white;
-  opacity:0;
-  transition:opacity 1s;
-  z-index:20;
-  box-shadow: 0 0 10px white;
-}
-
-/* Timer */
-#timer{
-  position:absolute;
-  bottom:20px;
-  right:30px;
-  color:white;
-  font-size:20px;
-  z-index:20;
-  font-family:Arial;
-}
-
-/* Click-to-play overlay for audio policy */
-#play-prompt {
+#projector-flicker {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
+  inset: 0;
+  background: rgba(255,255,255,0.08);
+  mix-blend-mode: screen;
+  animation: flicker 0.07s infinite steps(2);
+  pointer-events: none;
+  z-index: 20;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+/* ================================
+   SLIDES / INTERTITLES
+   ================================ */
+
+.slide {
+  position: absolute;
+  inset: 0;
+  background: black;
+  opacity: 0;
+  transition: opacity 0.1s linear; /* abrupt cuts */
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
-  font-size: 2rem;
-  z-index: 100;
-  cursor: pointer;
+}
+
+/* Heavy scratches, dust, dirt */
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, transparent 96%, rgba(255,255,255,0.25) 98%, transparent 100%),
+    radial-gradient(circle, rgba(255,255,255,0.3) 4%, transparent 5%);
+  background-size: 140px 140px, 260px 260px;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  animation: scratches 0.4s infinite steps(3);
+  pointer-events: none;
+}
+
+@keyframes scratches {
+  0% { background-position: 0 0, 0 0; }
+  50% { background-position: 60px 120px, -80px 60px; }
+  100% { background-position: 120px 240px, 120px -120px; }
+}
+
+/* Violent gate weave jitter */
+.slide.active {
+  opacity: 1;
+  animation: jitter 0.12s infinite;
+}
+
+@keyframes jitter {
+  0% { transform: translate(0,0); }
+  10% { transform: translate(-4px, 3px); }
+  20% { transform: translate(3px, -5px); }
+  30% { transform: translate(-6px, 2px); }
+  40% { transform: translate(5px, 4px); }
+  50% { transform: translate(-3px, -6px); }
+  60% { transform: translate(4px, -2px); }
+  70% { transform: translate(-5px, 5px); }
+  80% { transform: translate(2px, -4px); }
+  100% { transform: translate(0,0); }
+}
+
+/* ================================
+   INTERTITLE CARDS
+   ================================ */
+
+.intertitle {
+  background: black;
+  padding: 20px;
+  color: #e6e6e6;
+  font-size: 2.6rem;
+  max-width: 900px;
+  width: 80%;
   text-align: center;
   font-family: "Georgia", serif;
+  letter-spacing: 2px;
+  line-height: 1.6;
+  text-shadow: 1px 1px 4px rgba(255,255,255,0.2);
+}
+
+.intertitle-box {
+  border: 5px solid #777;
+  outline: 3px solid #222;
+  outline-offset: -12px;
+  padding: 50px 40px;
+  background: radial-gradient(circle, #151515 0%, #000 100%);
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.9);
+}
+
+/* ================================
+   FRAME BORDER (GATE MASK)
+   ================================ */
+
+.frame-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 20px solid #050505;
+  box-shadow:
+    inset 0 0 80px rgba(0,0,0,1),
+    inset 0 0 160px rgba(0,0,0,0.9);
+  z-index: 10;
+}
+
+/* ================================
+   CUE DOT (CIGARETTE BURN)
+   ================================ */
+
+#cue {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 40%, #666 100%);
+  border: 2px solid #000;
+  opacity: 0;
+  box-shadow: 0 0 12px white;
+  transition: opacity 0.2s;
+  z-index: 30;
+}
+
+/* ================================
+   FILM LEADER (3–2–1)
+   ================================ */
+
+#leader {
+  position: absolute;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12rem;
+  color: white;
+  z-index: 200;
+  animation: leaderCountdown 3s steps(1) forwards;
+}
+
+@keyframes leaderCountdown {
+  0% { content: "3"; }
+  33% { content: "2"; }
+  66% { content: "1"; }
+  100% { opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- User interaction overlay to satisfy browser autoplay policies -->
-<div id="play-prompt">Click Anywhere to Begin Silent Film</div>
+<!-- Film Leader -->
+<div id="leader">3</div>
 
 <div id="container">
+  <div id="projector-flicker"></div>
   <div class="frame-border"></div>
   <div id="cue"></div>
 
   <!-- Slide 1 -->
   <div class="slide active">
     <div class="intertitle">
-      April 10, 1912.<br>
-      The mighty TITANIC sets forth upon her maiden voyage.
+      <div class="intertitle-box">
+        April 10, 1912.<br>
+        The mighty TITANIC sets forth upon her maiden voyage.
+      </div>
     </div>
   </div>
 
   <!-- Slide 2 -->
   <div class="slide">
     <div class="intertitle">
-      A palace of steel and velvet,<br>
-      bearing more than two thousand souls toward New York.
+      <div class="intertitle-box">
+        A palace of steel and velvet,<br>
+        bearing more than two thousand souls toward New York.
+      </div>
     </div>
   </div>
 
   <!-- Slide 3 -->
   <div class="slide">
     <div class="intertitle">
-      On a moonless night…<br>
-      A silent shape of ice drifts into her path.
+      <div class="intertitle-box">
+        On a moonless night…<br>
+        A silent shape of ice drifts into her path.
+      </div>
     </div>
   </div>
 
   <!-- Slide 4 -->
   <div class="slide">
     <div class="intertitle">
-      The impact is gentle—yet mortal.<br>
-      Water floods the lower decks.
+      <div class="intertitle-box">
+        The impact is gentle—yet mortal.<br>
+        Water floods the lower decks.
+      </div>
     </div>
   </div>
 
   <!-- Slide 5 -->
   <div class="slide">
     <div class="intertitle">
-      Lifeboats descend into the icy Atlantic.<br>
-      The band plays on, brave to the final note.
+      <div class="intertitle-box">
+        Lifeboats descend into the icy Atlantic.<br>
+        The band plays on, brave to the final note.
+      </div>
     </div>
   </div>
 
   <!-- Slide 6 -->
   <div class="slide">
     <div class="intertitle">
-      At 2:20 a.m., TITANIC slips beneath the waves.<br>
-      More than 1,500 souls are lost.<br>
-      A tragedy remembered for all time.
+      <div class="intertitle-box">
+        At 2:20 a.m., TITANIC slips beneath the waves.<br>
+        More than 1,500 souls are lost.<br>
+        A tragedy remembered for all time.
+      </div>
     </div>
   </div>
 
-  <div id="timer">60</div>
 </div>
 
-<!-- Public-domain piano score -->
+<!-- Public-domain silent film piano score -->
 <audio id="music" loop>
   <source src="https://archive.org/download/Bethena/Bethena.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const promptOverlay = document.getElementById("play-prompt");
 const music = document.getElementById("music");
 const slides = document.querySelectorAll(".slide");
 let current = 0;
-let filmStarted = false;
 
-// Handle browser audio restrictions via click
-promptOverlay.addEventListener("click", () => {
-  promptOverlay.style.display = "none";
-  music.play().catch(e => console.log("Audio play blocked:", e));
-  startFilm();
-});
+/* Start film automatically after leader countdown */
+setTimeout(() => {
+  document.getElementById("leader").style.display = "none";
+  music.play().catch(()=>{});
+  runProjector();
+}, 3000);
 
-function startFilm() {
-  if (filmStarted) return;
-  filmStarted = true;
-
-  // Slide change every 10 seconds
-  const slideInterval = setInterval(() => {
+/* Randomized silent‑film timing */
+function runProjector() {
+  function nextSlide() {
     slides[current].classList.remove("active");
     current++;
-    if(current >= slides.length){
-      clearInterval(slideInterval);
-      current = slides.length - 1;
-      slides[current].classList.add("active");
-      return;
-    }
+
+    if (current >= slides.length) return;
+
     slides[current].classList.add("active");
-  }, 10000);
 
-  // Countdown timer + reel cue
-  let seconds = 60;
-  const timer = document.getElementById("timer");
+    const randomTime = 7000 + Math.random() * 6000; // 7–13 seconds
+    setTimeout(nextSlide, randomTime);
+  }
+
+  setTimeout(nextSlide, 3000);
+
+  /* Cigarette burn cue */
   const cue = document.getElementById("cue");
-
-  const countdown = setInterval(() => {
-    seconds--;
-    timer.innerHTML = seconds;
-
-    if(seconds === 30){
-      cue.style.opacity = 1;
-      setTimeout(() => cue.style.opacity = 0, 3000);
-    }
-
-    if(seconds <= 0){
-      clearInterval(countdown);
-    }
-  }, 1000);
+  setTimeout(() => {
+    cue.style.opacity = 1;
+    setTimeout(() => cue.style.opacity = 0, 2500);
+  }, 30000);
 }
 </script>
 
