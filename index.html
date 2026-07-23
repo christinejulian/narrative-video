@@ -1,520 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RMS Titanic - A Silent Motion Picture (1912)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
+  <meta charset="UTF-8" />
+  <title>RMS Titanic – Silent Era Film</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body, html {
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            overflow: hidden;
-            font-family: 'IM Fell English SC', serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-        }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: "Times New Roman", serif;
+      overflow: hidden;
+    }
 
-        /* Fullscreen Stage & Screen Structure */
-        #cinema-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+    .film-container {
+      position: fixed;
+      inset: 0;
+      background: #000;
+    }
 
-        #film-viewport {
-            position: relative;
-            width: 80vw;
-            height: 60vw;
-            max-width: 120vh;
-            max-height: 90vh;
-            background: #110d0a;
-            box-shadow: 0 0 50px rgba(0,0,0,1);
-            overflow: hidden;
-            border: 8px solid #1a1612;
-            border-radius: 4px;
-        }
+    .stage {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      overflow: hidden;
+    }
 
-        /* Vintage Sepia Film Processing & Vignette Filter */
-        .film-texture {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
+    /* Curtains */
+    .curtain {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background: radial-gradient(circle at top, #7a0000 0%, #3a0000 40%, #1a0000 100%);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9);
+      z-index: 20;
+      transition: transform 2s ease-in-out;
+    }
 
-        /* Sepia and Vignette Overlay */
-        .vignette {
-            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(30, 20, 10, 0.8);
-            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.8) 100%);
-        }
+    .curtain.left {
+      left: 0;
+      transform: translateX(0);
+    }
 
-        /* Film Grain & Scratches Animation */
-        .scratches {
-            background-image: repeating-linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0) 0px,
-                rgba(255, 255, 255, 0) 40px,
-                rgba(255, 255, 255, 0.08) 41px,
-                rgba(255, 255, 255, 0) 42px
-            );
-            animation: scratchShift 0.2s steps(2) infinite;
-            opacity: 0.7;
-        }
+    .curtain.right {
+      right: 0;
+      transform: translateX(0);
+    }
 
-        .dust {
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
-            background-size: 120px 120px;
-            animation: dustMove 0.8s steps(4) infinite;
-            opacity: 0.6;
-        }
+    .curtain.open.left {
+      transform: translateX(-100%);
+    }
 
-        /* Rapid Film Flicker Effect */
-        .flicker {
-            background: rgba(220, 190, 150, 0.08);
-            animation: flickerAnim 0.15s infinite;
-        }
+    .curtain.open.right {
+      transform: translateX(100%);
+    }
 
-        @keyframes scratchShift {
-            0% { transform: translateX(-10px); }
-            50% { transform: translateX(15px); }
-            100% { transform: translateX(-5px); }
-        }
+    .curtain.close.left {
+      transform: translateX(0);
+    }
 
-        @keyframes dustMove {
-            0% { background-position: 0 0; }
-            50% { background-position: 60px 40px; }
-            100% { background-position: -30px 80px; }
-        }
+    .curtain.close.right {
+      transform: translateX(0);
+    }
 
-        @keyframes flickerAnim {
-            0% { opacity: 0.3; }
-            25% { opacity: 0.6; }
-            50% { opacity: 0.2; }
-            75% { opacity: 0.7; }
-            100% { opacity: 0.4; }
-        }
+    /* Film frame */
+    .frame {
+      position: absolute;
+      inset: 5%;
+      border: 20px solid #111;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+      background: #000;
+      overflow: hidden;
+      animation: jitter 0.25s infinite alternate;
+    }
 
-        /* Stage Curtains */
-        .curtain {
-            position: absolute;
-            top: 0;
-            width: 50.5%;
-            height: 100%;
-            background: linear-gradient(90deg, #420404 0%, #780a0a 50%, #2e0202 100%);
-            box-shadow: inset 0 0 40px #000;
-            z-index: 100;
-            transition: transform 3.5s cubic-bezier(0.77, 0, 0.175, 1);
-        }
+    @keyframes jitter {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(0.6px, -0.6px); }
+    }
 
-        .curtain-left {
-            left: 0;
-            border-right: 2px solid #110000;
-        }
+    .film-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='no'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+      opacity: 0.4;
+      animation: flicker 1.2s infinite alternate;
+    }
 
-        .curtain-right {
-            right: 0;
-            border-left: 2px solid #110000;
-        }
+    @keyframes flicker {
+      0% { opacity: 0.25; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.55; }
+    }
 
-        .curtains-open .curtain-left {
-            transform: translateX(-100%);
-        }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.9) 100%);
+    }
 
-        .curtains-open .curtain-right {
-            transform: translateX(100%);
-        }
+    /* Scenes */
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
 
-        /* Movie Scenes Frame Styling */
-        .scene {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            filter: sepia(0.85) contrast(1.3) brightness(0.8) grayscale(0.2);
-            background-size: cover;
-            background-position: center;
-        }
+    .scene.active {
+      opacity: 1;
+    }
 
-        .scene.active {
-            opacity: 1;
-        }
+    .scene img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: grayscale(100%) contrast(1.2) brightness(0.9);
+    }
 
-        /* Image Motion (Ken Burns Silent Film Effect) */
-        .pan-zoom {
-            animation: panZoomAnim 12s ease-in-out infinite alternate;
-        }
+    .intertitle {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      text-align: center;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      letter-spacing: 0.05em;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 12px 18px;
+      border: 2px solid #ccc;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+    }
 
-        @keyframes panZoomAnim {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.12) translate(-10px, -5px); }
-        }
+    .intertitle span {
+      display: inline-block;
+      animation: subtleFade 2s ease-in-out;
+    }
 
-        /* Vintage Intertitles (Title Cards) */
-        .intertitle {
-            background-color: #080605;
-            color: #ebdcb9;
-            padding: 40px;
-            text-align: center;
-            border: 6px double #8a7343;
-            outline: 2px solid #3d311b;
-            outline-offset: -12px;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
-            width: 85%;
-            height: 80%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+    @keyframes subtleFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        .intertitle h1 {
-            font-size: 2.2rem;
-            letter-spacing: 4px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 4px #000;
-        }
+    .film-container {
+      animation: filmFadeIn 3s ease-in-out;
+    }
 
-        .intertitle h2 {
-            font-size: 1.4rem;
-            font-weight: 300;
-            line-height: 1.6;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            letter-spacing: 1px;
-        }
+    @keyframes filmFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        /* UI Play Overlay */
-        #start-overlay {
-            position: absolute;
-            z-index: 200;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.85);
-            width: 100%;
-            height: 100%;
-        }
-
-        .start-btn {
-            background: #8a7343;
-            color: #0a0806;
-            border: 2px solid #ebdcb9;
-            padding: 15px 35px;
-            font-size: 1.5rem;
-            font-family: 'IM Fell English SC', serif;
-            cursor: pointer;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(138, 115, 67, 0.4);
-        }
-
-        .start-btn:hover {
-            background: #ebdcb9;
-            color: #000;
-            box-shadow: 0 0 30px rgba(235, 220, 185, 0.8);
-            transform: scale(1.05);
-        }
-
-        /* Progress Bar (Retro Style) */
-        #progress-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            z-index: 50;
-        }
-
-        #progress-bar {
-            width: 0%;
-            height: 100%;
-            background: #8a7343;
-            transition: width 0.5s linear;
-        }
-    </style>
+    .sepia {
+      filter: sepia(0.4);
+    }
+  </style>
 </head>
 <body>
+  <div class="film-container">
+    <div class="stage">
+      <!-- Curtains -->
+      <div class="curtain left" id="curtainLeft"></div>
+      <div class="curtain right" id="curtainRight"></div>
 
-    <div id="cinema-container">
-        <!-- Theater Curtains -->
-        <div class="curtain curtain-left" id="curtain-left"></div>
-        <div class="curtain curtain-right" id="curtain-right"></div>
+      <!-- Film frame -->
+      <div class="frame sepia">
+        <!-- Replace src values with your uploaded images in chronological order -->
 
-        <!-- Start Overlay Button -->
-        <div id="start-overlay">
-            <h1 style="font-size: 2.5rem; color: #ebdcb9; margin-bottom: 20px; letter-spacing: 3px; text-shadow: 0 0 10px #000;">THE IMPERIAL CINEMA</h1>
-            <button class="start-btn" onclick="startFilm()">Start Motion Picture</button>
-            <p style="color: #8a7343; margin-top: 15px; font-size: 0.9rem; letter-spacing: 1px;">PRESENTING: TITANIC (90 SECONDS)</p>
+        <!-- Scene 1: Titanic majestic at sea -->
+        <div class="scene" id="scene1">
+          <img src="image1.jpg" alt="RMS Titanic at sea" />
+          <div class="intertitle">
+            <span>
+              April 1912. The great ship glides across the North Atlantic—steel and dreams stitched together, certain of its own invincibility.
+            </span>
+          </div>
         </div>
 
-        <!-- Main Silent Film Screen -->
-        <div id="film-viewport">
-            
-            <!-- Atmospheric Overlays -->
-            <div class="film-texture vignette"></div>
-            <div class="film-texture scratches"></div>
-            <div class="film-texture dust"></div>
-            <div class="film-texture flicker"></div>
-
-            <!-- SCENE 1: Title Card Opening (0s - 10s) -->
-            <div class="scene active" id="scene-1">
-                <div class="intertitle">
-                    <h1>R. M. S. TITANIC</h1>
-                    <h2>An Epic Narrative of the Great Ocean Liner in Motion Pictures</h2>
-                    <p style="margin-top: 20px; font-size: 0.8rem; color: #a69268;">PRODUCED BY THE HISTORICAL CINEMA CORP. — 1912</p>
-                </div>
-            </div>
-
-            <!-- SCENE 2: Ship at Harbor / Departure (10s - 22s) -->
-            <div class="scene" id="scene-2" style="background-image: url('RMS_Titanic_3_(cropped_to_ship).jpg');">
-                <div class="pan-zoom" style="width:100%; height:100%; background-image: inherit; background-size: cover; background-position: center;"></div>
-            </div>
-
-            <!-- SCENE 3: Title Card - The Voyage Begins (22s - 28s) -->
-            <div class="scene" id="scene-3">
-                <div class="intertitle">
-                    <h1>APRIL 10, 1912</h1>
-                    <h2>"The Palace of the Sea sets forth from Southampton on her Maiden Voyage..."</h2>
-                </div>
-            </div>
-
-            <!-- SCENE 4: Full Steam Ahead (28s - 42s) -->
-            <div class="scene" id="scene-4" style="background-image: url('RMS_Titanic_3_(cropped_to_ship).jpg'); filter: sepia(0.9) contrast(1.5) brightness(0.7);">
-                <div class="pan-zoom" style="width:100%; height:100%; background-image: inherit; background-size: cover; background-position: center; transform-origin: top right;"></div>
-            </div>
-
-            <!-- SCENE 5: Title Card - Iceberg Warning (42s - 50s) -->
-            <div class="scene" id="scene-5">
-                <div class="intertitle">
-                    <h1>NIGHTFALL IN THE NORTH ATLANTIC</h1>
-                    <h2>"A calm, cloudless night... and a perilous warning lurking unseen in the dark abyss."</h2>
-                </div>
-            </div>
-
-            <!-- SCENE 6: The Iceberg Collision & Crisis (50s - 68s) -->
-            <div class="scene" id="scene-6" style="background-image: url('istockphoto-1152195943-612x612.jpg'); filter: sepia(0.7) contrast(1.6) brightness(0.5);">
-                <div class="pan-zoom" style="width:100%; height:100%; background-image: inherit; background-size: cover; background-position: center;"></div>
-            </div>
-
-            <!-- SCENE 7: Title Card - Distress Signal (68s - 76s) -->
-            <div class="scene" id="scene-7">
-                <div class="intertitle">
-                    <h1>C. Q. D. — S. O. S.</h1>
-                    <h2>"Through the cold midnight air, Marconi wireless keys sound the desperate call for help..."</h2>
-                </div>
-            </div>
-
-            <!-- SCENE 8: The Aftermath / In Memoriam (76s - 90s) -->
-            <div class="scene" id="scene-8">
-                <div class="intertitle">
-                    <h1>IN MEMORIAM</h1>
-                    <h2>"Honoring the courageous souls lost on the tragic night of April 15, 1912."</h2>
-                    <h1 style="font-size: 1.2rem; margin-top: 25px;">THE END</h1>
-                </div>
-            </div>
-
-            <!-- Progress Bar Overlay -->
-            <div id="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-
+        <!-- Scene 2: Deck with lifeboats, passengers unaware -->
+        <div class="scene" id="scene2">
+          <img src="image2.jpg" alt="Titanic deck with lifeboats" />
+          <div class="intertitle">
+            <span>
+              On her decks, laughter and quiet conversations drift beneath the smokestacks. Lifeboats hang silently, mere ornaments to a faith in progress.
+            </span>
+          </div>
         </div>
+
+        <!-- Scene 3: Night of the disaster – lifeboats loading -->
+        <div class="scene" id="scene3">
+          <img src="image3.jpg" alt="Crowded lifeboat evacuation" />
+          <div class="intertitle">
+            <span>
+              Then—ice in the dark. The ship shudders. Orders barked, hearts racing. Lifeboats fill with faces caught between disbelief and terror.
+            </span>
+          </div>
+        </div>
+
+        <!-- Scene 4: Aftermath – divers and recovery work -->
+        <div class="scene" id="scene4">
+          <img src="image4.jpg" alt="Diver and crew recovery operations" />
+          <div class="intertitle">
+            <span>
+              In the days that follow, the sea keeps its secrets. Divers descend into the cold depths, searching for answers among twisted steel and silence.
+            </span>
+          </div>
+        </div>
+
+        <div class="film-grain"></div>
+        <div class="vignette"></div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Web Audio API Synthesizer (Generates Projector Noise + Silent Film Piano)
-        let audioCtx;
-        let isPlaying = false;
+  <!-- Narrator audio: replace with your own emotional human voice file -->
+  <audio id="narration" src="narration.mp3"></audio>
 
-        function initAudio() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // 1. Create Projector Whirring / Crackle Noise
-            const bufferSize = audioCtx.sampleRate * 2;
-            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 2 - 1;
-            }
+  <script>
+    // Approximate 90-second timeline:
+    // 0–4s: curtains closed
+    // 4–8s: curtains open
+    // 8–26s: Scene 1
+    // 26–44s: Scene 2
+    // 44–66s: Scene 3
+    // 66–86s: Scene 4
+    // 86–90s: curtains close
 
-            const whiteNoise = audioCtx.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            whiteNoise.loop = true;
+    const curtainLeft = document.getElementById("curtainLeft");
+    const curtainRight = document.getElementById("curtainRight");
+    const scenes = [
+      document.getElementById("scene1"),
+      document.getElementById("scene2"),
+      document.getElementById("scene3"),
+      document.getElementById("scene4")
+    ];
+    const narration = document.getElementById("narration");
 
-            // Lowpass filter to simulate mechanical hum
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.value = 400;
-
-            const noiseGain = audioCtx.createGain();
-            noiseGain.gain.value = 0.08;
-
-            whiteNoise.connect(filter);
-            filter.connect(noiseGain);
-            noiseGain.connect(audioCtx.destination);
-            whiteNoise.start();
-
-            // Projector Clicking Sound (Mechanical Rhythm)
-            setInterval(() => {
-                if (!isPlaying) return;
-                const clickOsc = audioCtx.createOscillator();
-                const clickGain = audioCtx.createGain();
-                clickOsc.type = 'triangle';
-                clickOsc.frequency.setValueAtTime(120, audioCtx.currentTime);
-                clickOsc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.03);
-                
-                clickGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                clickGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
-
-                clickOsc.connect(clickGain);
-                clickGain.connect(audioCtx.destination);
-                clickOsc.start();
-                clickOsc.stop(audioCtx.currentTime + 0.03);
-            }, 60); // 16 FPS click emulation
-
-            // 2. Vintage Piano Accompaniment
-            playSilentFilmPiano();
+    function showScene(index) {
+      scenes.forEach((scene, i) => {
+        if (i === index) {
+          scene.classList.add("active");
+        } else {
+          scene.classList.remove("active");
         }
+      });
+    }
 
-        // Simple procedurally generated 1900s piano score
-        function playNote(freq, duration, delay, type = 'sine') {
-            setTimeout(() => {
-                if (!isPlaying || !audioCtx) return;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    function openCurtains() {
+      curtainLeft.classList.add("open");
+      curtainRight.classList.add("open");
+      curtainLeft.classList.remove("close");
+      curtainRight.classList.remove("close");
+    }
 
-                // Vintage piano tone envelope
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    function closeCurtains() {
+      curtainLeft.classList.remove("open");
+      curtainRight.classList.remove("open");
+      curtainLeft.classList.add("close");
+      curtainRight.classList.add("close");
+    }
 
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            }, delay);
+    window.addEventListener("load", () => {
+      // Try to start narration shortly after curtains begin to open
+      setTimeout(() => {
+        try {
+          narration.play().catch(() => {});
+        } catch (e) {}
+      }, 5000);
+
+      // Curtains open
+      setTimeout(openCurtains, 4000);
+
+      // Scene 1
+      setTimeout(() => showScene(0), 8000);
+
+      // Scene 2
+      setTimeout(() => showScene(1), 26000);
+
+      // Scene 3
+      setTimeout(() => showScene(2), 44000);
+
+      // Scene 4
+      setTimeout(() => showScene(3), 66000);
+
+      // Curtains close
+      setTimeout(closeCurtains, 86000);
+
+      // Fade out narration near the end
+      setTimeout(() => {
+        const fadeDuration = 4000;
+        const startTime = performance.now();
+        function fade() {
+          const now = performance.now();
+          const elapsed = now - startTime;
+          const t = Math.min(elapsed / fadeDuration, 1);
+          narration.volume = 1 - t;
+          if (t < 1) requestAnimationFrame(fade);
         }
-
-        function playSilentFilmPiano() {
-            // Minor and Ragtime Motif Sequence across 90s
-            const notes = [
-                // Grand Opening Theme (A Minor)
-                {f: 220, d: 1.5, t: 0}, {f: 261.63, d: 1.5, t: 500}, {f: 329.63, d: 2, t: 1000},
-                {f: 440, d: 2.5, t: 1800}, {f: 392, d: 1, t: 2800}, {f: 329.63, d: 2, t: 3400},
-                
-                // Ocean Voyage Theme
-                {f: 174.61, d: 1.2, t: 10000}, {f: 220, d: 1.2, t: 10500}, {f: 261.63, d: 1.5, t: 11000},
-                {f: 349.23, d: 2.0, t: 11800}, {f: 329.63, d: 2.0, t: 13000},
-                
-                // Tension / Iceberg Theme (Dissonant)
-                {f: 130.81, d: 3, t: 45000}, {f: 138.59, d: 3, t: 45500}, 
-                {f: 116.54, d: 2, t: 52000}, {f: 123.47, d: 2, t: 52500},
-                {f: 220, d: 0.3, t: 58000}, {f: 233.08, d: 0.3, t: 58300}, {f: 220, d: 0.3, t: 58600},
-                
-                // Farewell Requiem
-                {f: 220, d: 3, t: 75000}, {f: 261.63, d: 3, t: 77000}, {f: 196, d: 4, t: 79000}
-            ];
-
-            // Loop notes sequence
-            notes.forEach(n => playNote(n.f, n.d, n.t));
-            
-            // Repeat motif loop throughout the film duration
-            setInterval(() => {
-                if(isPlaying) {
-                    notes.forEach(n => playNote(n.f, n.d, n.t));
-                }
-            }, 25000);
-        }
-
-        // Timeline Controller (90 Seconds Total)
-        const timeline = [
-            { time: 0, scene: 'scene-1' },    // 0s: Title Card
-            { time: 10, scene: 'scene-2' },   // 10s: Departure Harbor
-            { time: 22, scene: 'scene-3' },   // 22s: Maiden Voyage Title
-            { time: 28, scene: 'scene-4' },   // 28s: Full Steam Ahead
-            { time: 42, scene: 'scene-5' },   // 42s: Iceberg Warning Title
-            { time: 50, scene: 'scene-6' },   // 50s: Night Hazard Collision
-            { time: 68, scene: 'scene-7' },   // 68s: S.O.S Title
-            { time: 76, scene: 'scene-8' }    // 76s: In Memoriam / The End (ends at 90s)
-        ];
-
-        function startFilm() {
-            // Hide Overlay
-            document.getElementById('start-overlay').style.display = 'none';
-            
-            // Open Stage Curtains
-            document.getElementById('cinema-container').classList.add('curtains-open');
-            
-            // Audio Initialization
-            isPlaying = true;
-            initAudio();
-
-            // Progress Bar Animation (90s)
-            const progressBar = document.getElementById('progress-bar');
-            let startTime = Date.now();
-            const totalDuration = 90000; // 90 seconds
-
-            const progressInterval = setInterval(() => {
-                let elapsed = Date.now() - startTime;
-                let percentage = (elapsed / totalDuration) * 100;
-                if (percentage <= 100) {
-                    progressBar.style.width = percentage + '%';
-                } else {
-                    clearInterval(progressInterval);
-                }
-            }, 250);
-
-            // Execute Timeline Scene Transitions
-            timeline.forEach(item => {
-                setTimeout(() => {
-                    switchScene(item.scene);
-                }, item.time * 1000);
-            });
-        }
-
-        function switchScene(sceneId) {
-            const scenes = document.querySelectorAll('.scene');
-            scenes.forEach(s => s.classList.remove('active'));
-            
-            const activeScene = document.getElementById(sceneId);
-            if (activeScene) {
-                activeScene.classList.add('active');
-            }
-        }
-    </script>
+        fade();
+      }, 86000);
+    });
+  </script>
 </body>
 </html>
